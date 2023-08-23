@@ -1,0 +1,58 @@
+<!--
+ Copyright (c) 2014, 2023, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+<div id="register" class="oj-hybrid-applayout-page">
+  <div class="oj-applayout-fixed-top">
+    <header role="banner" class="oj-hybrid-applayout-header" style="visibility: hidden">
+      <oj-module config="[[headerConfig]]"></oj-module>
+    </header>
+  </div>
+  <div class="oj-applayout-content">
+    <div role="main" class="oj-hybrid-applayout-content">
+      <div class="oj-hybrid-padding">
+        <oj-form-layout 
+          max-columns="1" 
+          direction="row"
+          style="max-width: 100%"
+          class="oj-text-color-background-black"
+          >
+          <oj-input-text
+            id="cliente-name"
+            value="{{clientName}}"
+            label-hint="Informe o seu nome"
+            class="oj-text-color-background-black"
+            required
+            >
+          </oj-input-text>
+          <oj-input-text
+            id="cliente-city"
+            value="{{clientCity}}"
+            label-hint="Informe a sua cidade"
+            class="oj-text-color-background-city"
+            required
+            >
+          </oj-input-text>
+          <oj-button
+            id="save-registration"
+            style="width: -webkit-fill-available;"
+            on-oj-action="[[sendCustomerRegistration]]"
+            disabled="[[isBlankText]]"
+            >
+            <span slot='startIcon' class="icon-spinner9"></span>
+            Salvar Cadastro
+          </oj-button>
+        </oj-form-layout>
+        <oj-bind-if test="[[showMessage]]">
+          <oj-message-banner
+            data="[[messages]]"
+            type="page"
+            on-oj-close="[[closeMessage]]"
+            >
+          </oj-message-banner>
+        </oj-bind-if>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<!--
+ Copyright (c) 2014, 2023, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+<div id="order" class="oj-hybrid-applayout-page">
+  <div class="oj-applayout-fixed-top">
+    <header role="banner" class="oj-hybrid-applayout-header" style="visibility: hidden">
+      <oj-module config="[[headerConfig]]"></oj-module>
+    </header>
+  </div>
+  <div class="oj-applayout-content">
+    <div role="main" class="oj-hybrid-applayout-content">
+      <div class="oj-hybrid-padding">
+        <div id="listViewContainer">
+          <oj-bind-if test="[[showListView]]">
+            <oj-input-text
+              id="product-filter"
+              label-hint="Consulta de produtos"
+              class="oj-text-color-background-black"
+              clear-icon="always"
+              on-raw-value-changed="[[filterProducts]]"
+              >
+            </oj-input-text>
+            <oj-list-view
+              id="listview"
+              aria-label="List to show selection products"
+              class="oj-listview-item-padding-off"
+              data="[[dataProvider]]"
+              selection-mode="single"
+              on-selected-changed="[[handleSelectedChanged]]"
+              >
+              <template slot="itemTemplate" data-oj-as="item">
+                <oj-list-item-layout>
+                  <span class="oj-typography-body-md oj-text-color-background-black product-name">
+                    <oj-bind-text value="[[item.item.data.name]]"></oj-bind-text>
+                  </span>
+                  <oj-selector
+                    :id="[['listview_checkboxset' + item.item.data.id]]"
+                    :aria-label="[[item.item.data.name]]"
+                    slot="selector"
+                    selected-keys="{{selectedItems}}"
+                    selection-mode="multiple"
+                    row-key="[[getSelectedItems(item.item.data)]]"
+                    >
+                  </oj-selector>
+                  <oj-avatar 
+                    slot="leading"
+                    size="xs"
+                    src="[[item.item.data.image]]"
+                    >
+                  </oj-avatar>
+                  <span slot="secondary" class="oj-typography-body-sm oj-text-color-background-black product-title">
+                    <div class="oj-flex-item">
+                      <oj-bind-text value="[[item.item.data.title]]"></oj-bind-text>
+                    </div>
+                    <div class="oj-flex-item" style="font-weight: bold; font-size: 18px;">
+                      R$: <oj-bind-text value="[[item.item.data.unitPrice]]"></oj-bind-text>
+                    </div>
+                  </span>
+                  <div class="demo-flex-display">
+                    <oj-dialog
+                      class="oj-flex oj-lg-justify-content-center oj-sm-justify-content-center product-details"
+                      :id="[['product-details' + item.item.data.id]]"
+                      position.at.vertical="center"
+                      position.my.vertical="center"
+                      >
+                      <div class="oj-flex oj-lg-justify-content-flex-end oj-sm-justify-content-flex-end">
+                        <oj-button id="close-product-details" on-oj-action="[[closeProductDetails]]">X</oj-button>
+                      </div>
+                      <oj-avatar 
+                        class="oj-flex oj-lg-justify-content-center oj-sm-justify-content-center"
+                        shape="square"
+                        size="2xl"
+                        src="[[item.item.data.image]]"
+                        >
+                      </oj-avatar>
+                      <div>
+                        <span slot="primary" class="oj-flex oj-lg-justify-content-center oj-sm-justify-content-center oj-typography-body-md oj-text-color-background-black">
+                          <oj-bind-text value="[[item.item.data.name]]"></oj-bind-text>
+                        </span>
+                        <span slot="secondary" class="oj-flex oj-lg-justify-content-center oj-sm-justify-content-center oj-typography-body-sm oj-text-color-background-black">
+                          <oj-bind-text value="[[item.item.data.title]]"></oj-bind-text>
+                        </span>
+                      </div>
+                      <div class="oj-flex oj-lg-justify-content-center oj-sm-justify-content-center oj-dialog-body oj-complete">
+                        <hr>
+                        <oj-input-number
+                          value="{{item.item.data.quantity}}"
+                          style="width: 150px;"
+                          class="oj-text-color-background-black"
+                          min="1"
+                          step="1"
+                          >
+                        </oj-input-number>
+                      </div>
+                    </oj-dialog>
+                  </div>
+                </oj-list-item-layout>
+              </template>
+            </oj-list-view>
+            <hr>    
+            <div class="oj-typography-body-sm oj-text-color-background-black oj-flex oj-lg-justify-content-center oj-sm-justify-content-center">
+              <br />
+              <span>Total de Produtos:</span>
+            </div>
+            <div class="oj-typography-body-sm oj-text-color-background-black oj-flex oj-lg-justify-content-center oj-sm-justify-content-center">
+              <br />
+              <span id="curr-selection-value" style="font-weight: bold; font-size: 30px;">
+                R$ <oj-bind-text class="oj-sm-flex-initial oj-flex-item" value="[[getDisplayValue(selectedItems())]]"></oj-bind-text>
+              </span>
+            </div>
+            <hr>
+            <oj-button
+              id="whats-app"
+              style="width: -webkit-fill-available;"
+              on-oj-action="[[sendPurchaseOrderWhatsApp]]"
+              >
+              <span slot='startIcon' class="icon-whatsapp"></span>
+              Enviar Pedido
+            </oj-button>
+            <oj-dialog
+              id="info-register"
+              style="padding-top: 30px;"
+              position.at.vertical="center"
+              position.my.vertical="center"
+              >
+              <div slot="body">
+                <oj-label>Favor realizar o cadastro de cliente</oj-label>
+              </div>
+              <div slot="footer">
+                <oj-button on-oj-action="[[closeInfoRegister]]">Fechar</oj-button>
+              </div>
+            </oj-dialog>
+            <hr>
+          </oj-bind-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
